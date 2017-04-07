@@ -1,7 +1,7 @@
 # Overview
 This is a *sample microservice* application built with [Spring Boot](http://projects.spring.io/spring-boot/) and [Docker](https://www.docker.com/), deployed on Amazon ECS, to manage bananas :banana:
 
-![Architecture Diagram](architecture.png)
+This service demonstrates deployment with [mu](http://getmu.io)
 
 Review the steps below to learn how it was created and how to create your own:
 
