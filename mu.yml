@@ -1,0 +1,14 @@
+environments:
+- name: dev
+- name: production
+service:
+  name: banana-service
+  port: 8080
+  pathPatterns:
+  - /bananas
+  pipeline:
+    source:
+      provider: GitHub
+      repo: myuser/banana-service
+    build:
+      image: aws/codebuild/java:openjdk-8
