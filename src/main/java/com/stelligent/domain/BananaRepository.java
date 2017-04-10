@@ -2,6 +2,7 @@ package com.stelligent.domain;
 
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +18,13 @@ public class BananaRepository {
 
   private final AtomicLong counter = new AtomicLong();
   private final List<Banana> bananas = new ArrayList<>();
+
+  public BananaRepository() {
+    Banana firstBanana = new Banana();
+    firstBanana.setPickedAt(LocalDateTime.now());
+    firstBanana.setPeeled(false);
+    save(firstBanana);
+  }
 
   /**
    * Upsert a Banana object.  If it exists, update it...otherwise add as new.
