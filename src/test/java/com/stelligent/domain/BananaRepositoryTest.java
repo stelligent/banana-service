@@ -14,6 +14,8 @@ import java.util.List;
 public class BananaRepositoryTest {
   private BananaRepository repository;
 
+  private static final int INITIAL_SIZE = 1;
+
   @Before
   public void setup() {
     repository = new BananaRepository();
@@ -34,28 +36,28 @@ public class BananaRepositoryTest {
   @Test
   public void testSaveNew() {
     List<Banana> results= repository.findAll();
-    Assert.assertTrue("results are empty", results.isEmpty());
+    Assert.assertEquals("results size", INITIAL_SIZE, results.size());
 
     Banana b = repository.save(newBanana(false, LocalDateTime.now()));
     Assert.assertNotNull("id", b.getId());
 
     results = repository.findAll();
-    Assert.assertEquals("results size", 1, results.size());
-    Assert.assertEquals("id", b.getId(), results.get(0).getId());
+    Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
+    Assert.assertEquals("id", b.getId(), results.get(1).getId());
   }
 
   @Test
   public void testSaveExisting() {
     Banana b = repository.save(newBanana(false, LocalDateTime.now()));
     List<Banana> results= repository.findAll();
-    Assert.assertEquals("results size", 1, results.size());
+    Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
 
     b.setPeeled(true);
     repository.save(b);
 
     results = repository.findAll();
-    Assert.assertEquals("results size", 1, results.size());
-    Assert.assertTrue("peeled", results.get(0).getPeeled());
+    Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
+    Assert.assertTrue("peeled", results.get(1).getPeeled());
   }
 
   @Test
@@ -85,7 +87,7 @@ public class BananaRepositoryTest {
   @Test
   public void testFindAllEmpty() {
     List<Banana> results= repository.findAll();
-    Assert.assertTrue("results are empty", results.isEmpty());
+    Assert.assertEquals("results size", 1, results.size());
   }
 
   @Test
@@ -93,7 +95,7 @@ public class BananaRepositoryTest {
     repository.save(newBanana(false, LocalDateTime.now()));
     repository.save(newBanana(true, LocalDateTime.now()));
     List<Banana> results= repository.findAll();
-    Assert.assertEquals("results size", 2, results.size());
+    Assert.assertEquals("results size", INITIAL_SIZE + 2, results.size());
   }
 
   @Test
@@ -105,7 +107,7 @@ public class BananaRepositoryTest {
     Banana b = new Banana();
     b.setId(100L);
     repository.delete(b);
-    Assert.assertEquals("results size", 2, results.size());
+    Assert.assertEquals("results size", INITIAL_SIZE + 2, results.size());
   }
 
   @Test
@@ -113,11 +115,11 @@ public class BananaRepositoryTest {
     repository.save(newBanana(true, LocalDateTime.now()));
     Banana b = repository.save(newBanana(true, LocalDateTime.now()));
     List<Banana> results = repository.findAll();
-    Assert.assertEquals("results size", 2, results.size());
+    Assert.assertEquals("results size", INITIAL_SIZE + 2, results.size());
 
     repository.delete(b);
     results = repository.findAll();
-    Assert.assertEquals("results size", 1, results.size());
+    Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
     Assert.assertNotEquals("results size", b.getId(), results.get(0).getId());
   }
 
