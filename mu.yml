@@ -9,7 +9,7 @@ service:
   pipeline:
     source:
       provider: GitHub
-      repo: myuser/banana-service
+      repo: cplee/banana-service
     build:
       image: aws/codebuild/java:openjdk-8
     acceptance:
