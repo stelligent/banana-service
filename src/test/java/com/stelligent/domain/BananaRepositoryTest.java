@@ -1,30 +1,37 @@
 package com.stelligent.domain;
 
+import com.stelligent.BananaApplication;
+import com.stelligent.controller.BananaController;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by casey.lee on 9/12/16.
  */
+@RunWith(SpringRunner.class)
+@DataJpaTest
 public class BananaRepositoryTest {
+  @Autowired
   private BananaRepository repository;
 
   private static final int INITIAL_SIZE = 1;
-
-  @Before
-  public void setup() {
-    repository = new BananaRepository();
-  }
-
-  @After
-  public void teardown() {
-    repository = null;
-  }
 
   private Banana newBanana(boolean peeled, LocalDateTime pickedAt) {
     Banana b = new Banana();
@@ -35,13 +42,15 @@ public class BananaRepositoryTest {
 
   @Test
   public void testSaveNew() {
-    List<Banana> results= repository.findAll();
+    List<Banana> results= new ArrayList<>();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE, results.size());
 
     Banana b = repository.save(newBanana(false, LocalDateTime.now()));
     Assert.assertNotNull("id", b.getId());
 
-    results = repository.findAll();
+    results.clear();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
     Assert.assertEquals("id", b.getId(), results.get(1).getId());
   }
@@ -49,13 +58,15 @@ public class BananaRepositoryTest {
   @Test
   public void testSaveExisting() {
     Banana b = repository.save(newBanana(false, LocalDateTime.now()));
-    List<Banana> results= repository.findAll();
+    List<Banana> results= new ArrayList<>();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
 
     b.setPeeled(true);
     repository.save(b);
 
-    results = repository.findAll();
+    results.clear();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
     Assert.assertTrue("peeled", results.get(1).getPeeled());
   }
@@ -66,10 +77,9 @@ public class BananaRepositoryTest {
     Assert.assertNull("result is null", b);
   }
 
-  @Test
+  @Test(expected = InvalidDataAccessApiUsageException.class)
   public void testFindOneNullId() {
     Banana b = repository.findOne(null);
-    Assert.assertNull("result is null", b);
   }
 
   @Test
@@ -86,7 +96,8 @@ public class BananaRepositoryTest {
 
   @Test
   public void testFindAllEmpty() {
-    List<Banana> results= repository.findAll();
+    List<Banana> results= new ArrayList<>();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", 1, results.size());
   }
 
@@ -94,7 +105,8 @@ public class BananaRepositoryTest {
   public void testFindAllWithResults() {
     repository.save(newBanana(false, LocalDateTime.now()));
     repository.save(newBanana(true, LocalDateTime.now()));
-    List<Banana> results= repository.findAll();
+    List<Banana> results= new ArrayList<>();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE + 2, results.size());
   }
 
@@ -102,8 +114,11 @@ public class BananaRepositoryTest {
   public void testDeleteNotFound() {
     repository.save(newBanana(false, LocalDateTime.now()));
     repository.save(newBanana(true, LocalDateTime.now()));
-    List<Banana> results= repository.findAll();
-    repository.delete(null);
+    List<Banana> results= new ArrayList<>();
+    repository.findAll().forEach(results::add);
+    Banana toDelete = new Banana();
+    toDelete.setId(10000L);
+    repository.delete(toDelete);
     Banana b = new Banana();
     b.setId(100L);
     repository.delete(b);
@@ -114,11 +129,13 @@ public class BananaRepositoryTest {
   public void testDeleteFound() {
     repository.save(newBanana(true, LocalDateTime.now()));
     Banana b = repository.save(newBanana(true, LocalDateTime.now()));
-    List<Banana> results = repository.findAll();
+    List<Banana> results= new ArrayList<>();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE + 2, results.size());
 
     repository.delete(b);
-    results = repository.findAll();
+    results.clear();
+    repository.findAll().forEach(results::add);
     Assert.assertEquals("results size", INITIAL_SIZE + 1, results.size());
     Assert.assertNotEquals("results size", b.getId(), results.get(0).getId());
   }

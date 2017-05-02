@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 /**
@@ -68,9 +69,7 @@ public class BananaController {
           @RequestParam(value="peeled", required=false)
                   Boolean peeled) {
 
-    return bananaRepository
-            .findAll()
-            .stream()
+    return StreamSupport.stream(bananaRepository.findAll().spliterator(), false)
             .filter(b -> {
               if (Objects.nonNull(pickedAfter) && b.getPickedAt().isBefore(pickedAfter)) {
                 return false;

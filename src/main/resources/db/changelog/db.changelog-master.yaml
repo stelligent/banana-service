@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: cplee
+      changes:
+        - createTable:
+            tableName: banana
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: picked_at
+                  type: datetime
+                  constraints:
+                    nullable: true
+              - column:
+                  name: peeled
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: 2
+      author: cplee
+      changes:
+        - insert:
+            tableName: banana
+            columns:
+              - column:
+                  name: picked_at
+                  value: now()
+              - column:
+                  name: peeled
+                  value: false

@@ -1,12 +1,20 @@
 package com.stelligent.domain;
 
 import org.springframework.hateoas.Identifiable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 /**
  * Domain model representing the Banana object
  */
+@Entity
 public class Banana implements Identifiable<Long>{
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
   private Long id;
   private LocalDateTime pickedAt;
   private Boolean peeled;
