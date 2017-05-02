@@ -34,6 +34,3 @@ databaseChangeLog:
               - column:
                   name: picked_at
                   value: now()
-              - column:
-                  name: peeled
-                  value: false
