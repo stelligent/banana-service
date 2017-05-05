@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: BananaService
   jpa:
     hibernate:
       ddl-auto: none

@@ -34,6 +34,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-hateoas")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.cloud:spring-cloud-starter-consul-discovery:1.2.0.RELEASE')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
     compile('org.liquibase:liquibase-core')
     compile('com.h2database:h2')
@@ -41,3 +42,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
+bootRun {
+    // support passing -Dsystem.property=value to bootRun task
+    systemProperties = System.properties
+}

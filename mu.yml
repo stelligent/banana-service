@@ -1,12 +1,6 @@
-environments:
-- name: dev
-- name: production
-
 service:
   name: banana-service
   port: 8080
-  pathPatterns:
-  - /bananas
   environment:
     SPRING_DATASOURCE_USERNAME: ${DatabaseMasterUsername}
     SPRING_DATASOURCE_PASSWORD: ${DatabaseMasterPassword}
@@ -21,3 +15,5 @@ service:
       image: aws/codebuild/eb-nodejs-4.4.6-amazonlinux-64:2.1.3
   database:
     name: banana
+
+
